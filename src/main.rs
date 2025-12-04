@@ -34,7 +34,7 @@ fn main() -> io::Result<()> {
         .build_global()
         .unwrap();
 
-    eprintln!("LOG -- Building target ngram index");
+    eprintln!("LOG -- building target ngram index");
     let target_db = TargetDatabase::new(targets);
 
     eprintln!("LOG -- calculating scores");
@@ -42,12 +42,6 @@ fn main() -> io::Result<()> {
         .par_iter()
         .enumerate()
         .flat_map(|(query_index, query)| {
-            eprintln!(
-                "LOG -- Processing query {}/{}",
-                query_index + 1,
-                queries.len()
-            );
-
             let mut rng = rand::rng();
             let mut top_hits: Vec<TopHit> = Vec::new();
 
@@ -116,6 +110,8 @@ fn main() -> io::Result<()> {
             target_header
         )?;
     }
+
+    eprintln!("LOG -- done!");
 
     Ok(())
 }
