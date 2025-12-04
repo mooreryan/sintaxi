@@ -13,7 +13,6 @@ use std::io::Write;
 use std::path::PathBuf;
 
 const NGRAM_SIZE: u8 = 8;
-const ITERATION_COUNT: u8 = 100;
 const SAMPLE_SIZE: u8 = 32;
 
 fn main() -> io::Result<()> {
@@ -47,7 +46,7 @@ fn main() -> io::Result<()> {
 
             let mut scores = vec![0u8; target_db.records.len()];
 
-            for iteration in 0..ITERATION_COUNT {
+            for iteration in 0..cli.iterations {
                 // Reset scores to zero
                 scores.fill(0);
 
@@ -139,6 +138,11 @@ struct Cli {
     ///
     #[arg(short, long, default_value_t = 1)]
     threads: usize,
+
+    /// Number of iterations for the bootstrap
+    ///
+    #[arg(short, long, default_value_t = 1000)]
+    iterations: usize,
 }
 
 struct TargetDatabase {
@@ -172,7 +176,7 @@ impl TargetDatabase {
 struct TopHit {
     query_index: usize,
     target_index: usize,
-    iteration_index: u8,
+    iteration_index: usize,
     score: u8,
 }
 fn subsample_ngrams<'a>(
